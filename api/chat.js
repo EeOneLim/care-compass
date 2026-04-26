@@ -5,7 +5,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 async function logTrace({ session_id, messages, response, usage, latency_ms }) {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) return;
-  await fetch(`${process.env.SUPABASE_URL}/rest/v1/traces`, {
+  await fetch(`${process.env.SUPABASE_URL}/rest/v1/traces?on_conflict=session_id`, {
     method: 'POST',
     headers: {
       'apikey': process.env.SUPABASE_ANON_KEY,
