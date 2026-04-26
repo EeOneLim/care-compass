@@ -168,11 +168,23 @@ export default function CareCompass() {
             <div style={styles.headerSub}>Caregivers' guide to support</div>
           </div>
         </div>
-        {hasStarted && (
-          <button onClick={handleNewChat} style={styles.newChatBtn}>
-            New chat
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleNewChat}
+          disabled={!hasStarted}
+          style={{
+            ...styles.newChatIconBtn,
+            opacity: hasStarted ? 1 : 0,
+            pointerEvents: hasStarted ? "auto" : "none",
+          }}
+          title="New chat"
+          aria-label="New chat"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
       </div>
 
       {/* Messages area */}
@@ -357,8 +369,9 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "14px 20px",
-    background: "#3D6B4F",
-    color: "white",
+    background: "#FAFAF7",
+    borderBottom: "1px solid #E8E8E0",
+    color: "#3D6B4F",
     flexShrink: 0,
   },
   headerLeft: {
@@ -377,19 +390,24 @@ const styles = {
   },
   headerSub: {
     fontSize: "12px",
-    opacity: 0.8,
+    color: "#6A9A7A",
     lineHeight: 1.2,
   },
-  newChatBtn: {
-    background: "rgba(255,255,255,0.15)",
-    border: "1px solid rgba(255,255,255,0.3)",
-    color: "white",
-    padding: "6px 14px",
-    borderRadius: "20px",
-    fontSize: "13px",
+  newChatIconBtn: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    border: "none",
+    background: "transparent",
+    color: "#3D6B4F",
+    fontSize: "18px",
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    transition: "opacity 0.2s, background 0.2s",
     fontFamily: "'DM Sans', sans-serif",
-    transition: "background 0.2s",
   },
   messagesArea: {
     flex: 1,
