@@ -19,6 +19,8 @@ async function logTrace({ session_id, messages, response, usage, latency_ms }) {
       response,
       input_tokens: usage?.input_tokens,
       output_tokens: usage?.output_tokens,
+      cache_creation_tokens: usage?.cache_creation_input_tokens,
+      cache_read_tokens: usage?.cache_read_input_tokens,
       latency_ms,
     }),
   });
@@ -44,9 +46,9 @@ export default async function handler(req, res) {
 
   try {
     const stream = client.messages.stream({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
       messages,
     });
 
