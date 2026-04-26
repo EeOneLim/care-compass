@@ -33,6 +33,13 @@ export default function CareCompass() {
   const [isRestoring, setIsRestoring] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const welcomeInputRef = useRef(null);
+
+  const autoResize = (el) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  };
 
   // Load saved conversation on mount
   useEffect(() => {
@@ -71,6 +78,7 @@ export default function CareCompass() {
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
+    [inputRef, welcomeInputRef].forEach(r => { if (r.current) r.current.style.height = 'auto'; });
     setIsLoading(true);
 
     let assistantText = "";
@@ -196,10 +204,12 @@ export default function CareCompass() {
 
             {/* Primary input area in welcome */}
             <form onSubmit={handleSubmit} style={styles.welcomeInputForm}>
-              <input
-                type="text"
+              <textarea
+                ref={welcomeInputRef}
+                rows={1}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => { setInput(e.target.value); autoResize(e.target); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.trim() && !isLoading) handleSubmit(e); } }}
                 placeholder="E.g. My mother needs help at home..."
                 style={styles.welcomeTextInput}
                 disabled={isLoading}
@@ -292,11 +302,12 @@ export default function CareCompass() {
       {hasStarted && (
       <div style={styles.inputArea}>
         <form onSubmit={handleSubmit} style={styles.inputForm}>
-          <input
+          <textarea
             ref={inputRef}
-            type="text"
+            rows={1}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => { setInput(e.target.value); autoResize(e.target); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.trim() && !isLoading) handleSubmit(e); } }}
             placeholder="Type your message..."
             style={styles.textInput}
             disabled={isLoading}
@@ -444,6 +455,7 @@ const styles = {
   },
   welcomeInputForm: {
     display: "flex",
+    alignItems: "flex-end",
     gap: "8px",
     width: "100%",
     maxWidth: "420px",
@@ -459,6 +471,12 @@ const styles = {
     background: "white",
     color: "#2D2D2D",
     transition: "border-color 0.2s",
+    resize: "none",
+    overflow: "hidden",
+    minHeight: "52px",
+    maxHeight: "200px",
+    lineHeight: 1.5,
+    boxSizing: "border-box",
   },
   schemeDivider: {
     display: "flex",
@@ -598,6 +616,7 @@ const styles = {
   },
   inputForm: {
     display: "flex",
+    alignItems: "flex-end",
     gap: "8px",
     maxWidth: "680px",
     margin: "0 auto",
@@ -613,6 +632,12 @@ const styles = {
     background: "white",
     color: "#2D2D2D",
     transition: "border-color 0.2s",
+    resize: "none",
+    overflow: "hidden",
+    minHeight: "46px",
+    maxHeight: "200px",
+    lineHeight: 1.5,
+    boxSizing: "border-box",
   },
   sendBtn: {
     width: "44px",
