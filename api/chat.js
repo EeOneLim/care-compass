@@ -5,6 +5,16 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 async function logTrace({ session_id, messages, response, usage, latency_ms }) {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) return;
+  const payload = {
+    session_id,
+    messages,
+    response,
+    input_tokens: typeof usage?.input_tokens === 'number' ? usage.input_tokens : null,
+    output_tokens: typeof usage?.output_tokens === 'number' ? usage.output_tokens : null,
+    latency_ms,
+  };
+  console.log('logTrace usage:', JSON.stringify(usage));
+  console.log('logTrace payload keys:', Object.keys(payload));
   const res = await fetch(`${process.env.SUPABASE_URL}/rest/v1/traces?on_conflict=session_id`, {
     method: 'POST',
     headers: {
@@ -13,14 +23,7 @@ async function logTrace({ session_id, messages, response, usage, latency_ms }) {
       'Content-Type': 'application/json',
       'Prefer': 'resolution=merge-duplicates,return=minimal',
     },
-    body: JSON.stringify({
-      session_id,
-      messages,
-      response,
-      input_tokens: usage?.input_tokens,
-      output_tokens: usage?.output_tokens,
-      latency_ms,
-    }),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const body = await res.text();
