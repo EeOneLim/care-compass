@@ -11,7 +11,7 @@ async function logTrace({ session_id, messages, response, usage, latency_ms }) {
       'apikey': process.env.SUPABASE_ANON_KEY,
       'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
       'Content-Type': 'application/json',
-      'Prefer': 'return=minimal',
+      'Prefer': 'resolution=merge-duplicates,return=minimal',
     },
     body: JSON.stringify({
       session_id,
