@@ -68,15 +68,16 @@ export default async function handler(req, res) {
     const latency_ms = Date.now() - startTime;
 
     res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
-    res.end();
 
-    logTrace({
+    await logTrace({
       session_id,
       messages,
       response: fullResponseText,
       usage: finalMessage.usage,
       latency_ms,
     }).catch(err => console.error('Supabase log error:', err));
+
+    res.end();
   } catch (err) {
     console.error('Claude API error:', err);
     res.write(`data: ${JSON.stringify({ type: 'error', message: 'Something went wrong. Please try again.' })}\n\n`);
