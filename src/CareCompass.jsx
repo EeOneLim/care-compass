@@ -264,9 +264,6 @@ export default function CareCompass() {
                   justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
                 }}
               >
-                {msg.role === "assistant" && (
-                  <div style={styles.avatarSmall}>C</div>
-                )}
                 <div
                   style={
                     msg.role === "user"
@@ -283,7 +280,6 @@ export default function CareCompass() {
             ))}
             {isLoading && (
               <div style={styles.messageBubbleWrap}>
-                <div style={styles.avatarSmall}>C</div>
                 <div style={styles.assistantBubble}>
                   <div style={styles.typing}>
                     <span style={styles.dot1}></span>
@@ -355,7 +351,7 @@ const styles = {
     flexDirection: "column",
     height: "100vh",
     width: "100%",
-    background: "#FAFAF7",
+    background: "#FFFFFF",
     fontFamily: "'DM Sans', sans-serif",
     color: "#2D2D2D",
     overflow: "hidden",
@@ -366,7 +362,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
-    background: "#FAFAF7",
+    background: "#FFFFFF",
     fontFamily: "'DM Sans', sans-serif",
   },
   loadingText: {
@@ -380,7 +376,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "14px 20px",
-    background: "#FAFAF7",
+    background: "#FFFFFF",
     borderBottom: "1px solid #E8E8E0",
     color: "#3D6B4F",
     flexShrink: 0,
@@ -556,8 +552,8 @@ const styles = {
     fontFamily: "'Source Serif 4', serif",
   },
   userBubble: {
-    background: "#3D6B4F",
-    color: "white",
+    background: "#E8F5EE",
+    color: "#1A1A1A",
     padding: "12px 16px",
     borderRadius: "18px 18px 4px 18px",
     maxWidth: "75%",
@@ -565,16 +561,10 @@ const styles = {
     lineHeight: 1.6,
   },
   assistantBubble: {
-    background: "white",
     color: "#2D2D2D",
-    padding: "12px 16px",
-    borderRadius: "18px 18px 18px 4px",
-    maxWidth: "75%",
+    maxWidth: "100%",
     fontSize: "14.5px",
     lineHeight: 1.7,
-    fontFamily: "'Source Serif 4', serif",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-    border: "1px solid #EEEEE8",
   },
   typing: {
     display: "flex",
@@ -610,7 +600,7 @@ const styles = {
   },
   inputArea: {
     padding: "12px 20px 16px",
-    background: "#FAFAF7",
+    background: "#FFFFFF",
     borderTop: "1px solid #E8E8E0",
     flexShrink: 0,
   },
