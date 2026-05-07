@@ -210,7 +210,7 @@ export default function CareCompass() {
                 value={input}
                 onChange={(e) => { setInput(e.target.value); autoResize(e.target); }}
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.trim() && !isLoading) handleSubmit(e); } }}
-                placeholder="E.g. My mother needs help at home..."
+                placeholder="Ask anything"
                 style={styles.welcomeTextInput}
                 disabled={isLoading}
                 autoFocus
@@ -431,7 +431,7 @@ const styles = {
     justifyContent: "center",
     textAlign: "center",
     padding: "32px 20px 20px",
-    maxWidth: "480px",
+    maxWidth: "680px",
     margin: "0 auto",
     minHeight: "100%",
   },
@@ -457,7 +457,7 @@ const styles = {
     alignItems: "flex-end",
     gap: "8px",
     width: "100%",
-    maxWidth: "420px",
+    maxWidth: "680px",
   },
   welcomeTextInput: {
     flex: 1,
@@ -482,7 +482,7 @@ const styles = {
     alignItems: "center",
     gap: "12px",
     width: "100%",
-    maxWidth: "420px",
+    maxWidth: "680px",
     margin: "24px 0 16px",
   },
   schemeDividerLine: {
