@@ -12,6 +12,10 @@ function getSessionId() {
   return id;
 }
 
+function getAdminToken() {
+  return new URLSearchParams(window.location.search).get('admin') || null;
+}
+
 const SCHEME_BUTTONS = [
   { label: "Home Caregiving Grant", emoji: "🏠" },
   { label: "Long Term Care Subsidy", emoji: "🏥" },
@@ -87,9 +91,13 @@ export default function CareCompass() {
     try {
       const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
 
+      const adminToken = getAdminToken();
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(adminToken ? { "X-Bypass-Token": adminToken } : {}),
+        },
         body: JSON.stringify({
           session_id: getSessionId(),
           messages: apiMessages,
@@ -97,6 +105,7 @@ export default function CareCompass() {
       });
 
       if (!response.ok) {
+        if (response.status === 429) throw new Error('RATE_LIMIT');
         throw new Error(`API error: ${response.status}`);
       }
 
@@ -132,9 +141,12 @@ export default function CareCompass() {
         }
       }
     } catch (err) {
+      const isRateLimit = err.message === 'RATE_LIMIT';
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: "Sorry, I'm having trouble connecting right now. Please try again in a moment, or call AIC at 1800-650-6060 for immediate help.",
+        content: isRateLimit
+          ? "You've sent a lot of messages! Please try again in an hour, or call AIC at 1800-650-6060 for immediate help."
+          : "Sorry, I'm having trouble connecting right now. Please try again in a moment, or call AIC at 1800-650-6060 for immediate help.",
       }]);
     } finally {
       setIsLoading(false);

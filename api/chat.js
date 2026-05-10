@@ -3,6 +3,10 @@ import SYSTEM_PROMPT from '../lib/system_prompt.js';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+const RATE_LIMIT_MAX = 15;
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const rateLimitMap = new Map();
+
 async function logTrace({ session_id, messages, response, usage, latency_ms }) {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) return;
   const payload = {
@@ -40,6 +44,21 @@ export default async function handler(req, res) {
 
   if (!session_id || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Missing session_id or messages' });
+  }
+
+  const bypassToken = req.headers['x-bypass-token'];
+  const isAdmin = bypassToken && bypassToken === process.env.RATE_LIMIT_BYPASS_TOKEN;
+  if (!isAdmin) {
+    const ip = ((req.headers['x-forwarded-for'] || '') + '').split(',')[0].trim() || 'unknown';
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip);
+    if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+      rateLimitMap.set(ip, { count: 1, windowStart: now });
+    } else if (entry.count >= RATE_LIMIT_MAX) {
+      return res.status(429).json({ error: 'Rate limit exceeded. Please try again in an hour.' });
+    } else {
+      entry.count++;
+    }
   }
 
   res.setHeader('Content-Type', 'text/event-stream');
