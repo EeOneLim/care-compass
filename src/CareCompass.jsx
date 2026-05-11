@@ -513,6 +513,7 @@ const styles = {
     width: "100%",
     maxWidth: "420px",
     flexWrap: "wrap",
+    justifyContent: "center",
   },
   schemeBtn: {
     display: "flex",
@@ -523,7 +524,7 @@ const styles = {
     border: "1px solid #C8DCC8",
     borderRadius: "20px",
     cursor: "pointer",
-    textAlign: "left",
+    textAlign: "center",
     transition: "all 0.2s",
     fontFamily: "'DM Sans', sans-serif",
     flex: "1 1 auto",
