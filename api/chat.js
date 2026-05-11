@@ -3,7 +3,7 @@ import SYSTEM_PROMPT from '../lib/system_prompt.js';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const RATE_LIMIT_MAX = 15;
+const RATE_LIMIT_MAX = 60;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const rateLimitMap = new Map();
 
