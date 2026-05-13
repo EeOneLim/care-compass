@@ -8,7 +8,7 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const rateLimitMap = new Map();
 
 async function logTrace({ session_id, messages, response, usage, latency_ms }) {
-  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) return;
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) return;
   const payload = {
     session_id,
     messages,
@@ -22,8 +22,8 @@ async function logTrace({ session_id, messages, response, usage, latency_ms }) {
   const res = await fetch(`${process.env.SUPABASE_URL}/rest/v1/traces?on_conflict=session_id`, {
     method: 'POST',
     headers: {
-      'apikey': process.env.SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+      'apikey': process.env.SUPABASE_SERVICE_ROLE_KEY,
+      'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
       'Content-Type': 'application/json',
       'Prefer': 'resolution=merge-duplicates,return=minimal',
     },
